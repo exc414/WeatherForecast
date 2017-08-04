@@ -1,5 +1,5 @@
 //
-//File name     : Weather.swift
+//File name     : WeatherCity.swift
 //Project name  : WeatherForecast
 //Created by    : Carlos Perez 
 //Created on    : 7/29/17
@@ -8,12 +8,13 @@
 import Foundation
 
 //Model object
-class Weather
+class WeatherCity
 {
     private var cityName: String!;
     private var date: String!;
     private var weatherType: String!;
-    private var currentTemp: Double!;
+    private var currentTemp: String!;
+    private var country: String!;
     
     public func setCityName(cityName: String)
     {
@@ -23,6 +24,16 @@ class Weather
     public func getCityName() -> String
     {
         return cityName;
+    }
+    
+    public func setCountry(country: String)
+    {
+        self.country = country;
+    }
+    
+    public func getCountry() -> String
+    {
+        return country;
     }
     
     public func setDate(date: String)
@@ -38,7 +49,7 @@ class Weather
         dateFormatter.dateStyle = .long;
         dateFormatter.timeStyle = .none;
         let currentDate: String = dateFormatter.string(from: Date());
-        self.date = "Today, \(currentDate)";
+        self.date = "\(currentDate)";
         
         return date;
     }
@@ -53,12 +64,12 @@ class Weather
         return weatherType;
     }
     
-    public func setCurrentTemp(currentTemp: Double)
+    public func setCurrentTemp(currentTemp: String)
     {
         self.currentTemp = currentTemp;
     }
     
-    public func getCurrentTemp() -> Double
+    public func getCurrentTemp() -> String
     {
         return currentTemp;
     }

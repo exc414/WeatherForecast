@@ -1,5 +1,5 @@
 //
-//File name     : Weather.swift
+//File name     : WeatherPresenter.swift
 //Project name  : WeatherForecast
 //Created by    : Carlos Perez 
 //Created on    : 7/29/17
@@ -10,7 +10,8 @@ import Foundation
 protocol WeatherPresenterProtocol
 {
     //Post the weather or error information to main view.
-    func postWeather(weather: Weather);
+    func postWeather(weather: WeatherCity);
+    func postForecasts(forecasts: [WeatherForecast]);
     func postError(error: String);
 }
 
@@ -19,6 +20,7 @@ class WeatherPresenter
     private var presenter: WeatherPresenterProtocol!;
     private var weatherService: WeatherService!;
     private var getWeatherURL: String!;
+    private var getForecastURL: String!;
     
     init(presenter: WeatherPresenterProtocol)
     {
@@ -31,7 +33,10 @@ class WeatherPresenter
     func getWeather(cityName: String)
     {
         getWeatherURL = BASE_WEATHER_URL + CITY_NAME + cityName;
-        post(getWeatherURL: getWeatherURL);
+        getForecastURL = BASE_FORECAST_WEATHER_URL + NUMBER_OF_DAYS_TO_RETRIEVE
+            + CITY_NAME + cityName;
+        
+        post(getWeatherURL: getWeatherURL, getForecastURL: getForecastURL);
     }
     
     //When the apps first starts use the location services to get
@@ -39,10 +44,13 @@ class WeatherPresenter
     func onStartUp(lat: String, lon: String)
     {
         getWeatherURL = BASE_WEATHER_URL + LATITUDE + lat + LONGITUDE + lon;
-        post(getWeatherURL: getWeatherURL);
+        getForecastURL = BASE_FORECAST_WEATHER_URL + NUMBER_OF_DAYS_TO_RETRIEVE
+            + LATITUDE + lat + LONGITUDE + lon;
+        
+        post(getWeatherURL: getWeatherURL, getForecastURL: getForecastURL);
     }
     
-    private func post(getWeatherURL: String)
+    private func post(getWeatherURL: String, getForecastURL: String)
     {
         weatherService.downloadWeatherDetails(getWeatherURL: getWeatherURL)
         {
@@ -55,6 +63,17 @@ class WeatherPresenter
                 self.presenter.postError(error: weatherPayload.getMessage());
             }
             else { self.presenter.postWeather(weather: weatherPayload.getWeather()); }
+        }
+        
+        weatherService.downloadWeatherForecast(getForecastURL: getForecastURL)
+        {
+            (weatherPayload: WeatherPayload) in
+            
+            if(weatherPayload.isError())
+            {
+                self.presenter.postError(error: weatherPayload.getMessage());
+            }
+            else { self.presenter.postForecasts(forecasts: weatherPayload.getForecasts()); }
         }
     }
 }

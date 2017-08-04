@@ -10,16 +10,17 @@ import Foundation
 class WeatherPayload
 {
     
-    private var weather: Weather!;
+    private var weather: WeatherCity!;
     private var error: Bool!;
     private var message: String!;
+    private var forecasts: [WeatherForecast]!;
     
-    public func setWeather(weather: Weather)
+    public func setWeather(weather: WeatherCity)
     {
         self.weather = weather;
     }
     
-    public func getWeather() -> Weather
+    public func getWeather() -> WeatherCity
     {
         return weather;
     }
@@ -42,6 +43,16 @@ class WeatherPayload
     public func getMessage() -> String
     {
         return message;
+    }
+    
+    public func setForecasts(forecasts: [WeatherForecast])
+    {
+        self.forecasts = forecasts;
+    }
+    
+    public func getForecasts() -> [WeatherForecast]
+    {
+        return forecasts;
     }
     
 }
